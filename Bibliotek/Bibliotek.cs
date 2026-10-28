@@ -1,7 +1,7 @@
 public class Book(string name)
 {
     public string Name {get; set;} = name;
-    public bool IsBorrowed {get; set;} = false;
+    public bool IsBorrowed {get; set;} = false; // true == not available
 }
 
 public class BookShelf
@@ -10,24 +10,46 @@ public class BookShelf
 
     public void AddBook(Book book)
     {
-        //TODO: finish function
+        _bookShelf.Add(book);
+    }
+    Book? ReturnWantedBook(string bookName)
+    {
+        foreach(Book books in _bookShelf)
+        {
+            if(books.Name == bookName)
+            {
+                return books;
+            }
+        }
+        return null;
     }
     public List<Book> GetAll()
     {
-        // TODO: return correct list
-        return new List<Book>();
+        return new (_bookShelf);
     }
-    public bool? CheckAvailability(Book book)
+    
+    public bool CheckAvailability(string bookName)
     {
-        //TODO: give correct value
-        return null;
+        Book? _book = ReturnWantedBook(bookName);
+        if(_book != null)
+        {
+            return _book.IsBorrowed;
+        }
+        return true;
     }
-    public void BorrowBook(Book book)
+    public void BorrowBook(string bookName)
     {
-        //TODO: finish function
+        if(CheckAvailability(bookName))
+            return;
+        Book? _book = ReturnWantedBook(bookName);
+        if(_book != null)
+            _book.IsBorrowed = true;
+            
     }
-    public void ReturnBook(Book book)
+    public void ReturnBook(string bookName)
     {
-        //TODO: finish function
+        Book? _book = ReturnWantedBook(bookName);
+        if(_book != null)
+            _book.IsBorrowed = false;
     }
 }

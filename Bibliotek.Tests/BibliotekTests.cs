@@ -22,7 +22,7 @@ public class BibliotekTests
 
         _bookShelf.AddBook(book1);
 
-        Assert.True(_bookShelf.CheckAvailability(book1));
+        Assert.True(!_bookShelf.CheckAvailability(book1.Name));
     }
     [Fact]
     public void TestBorrowBook()
@@ -32,11 +32,11 @@ public class BibliotekTests
 
         _bookShelf.AddBook(book1);
 
-        Assert.True(_bookShelf.CheckAvailability(book1));
+        Assert.True(!_bookShelf.CheckAvailability(book1.Name));
         
-        _bookShelf.BorrowBook(book1);
+        _bookShelf.BorrowBook(book1.Name);
 
-        Assert.True(!_bookShelf.CheckAvailability(book1));
+        Assert.True(_bookShelf.CheckAvailability(book1.Name));
 
     }
     [Fact]
@@ -46,12 +46,12 @@ public class BibliotekTests
         Book book1 = new Book("Hunger games");
 
         _bookShelf.AddBook(book1);
-        _bookShelf.BorrowBook(book1);
+        _bookShelf.BorrowBook(book1.Name);
 
-        Assert.True(!_bookShelf.CheckAvailability(book1));
+        Assert.True(_bookShelf.CheckAvailability(book1.Name));
 
-        _bookShelf.ReturnBook(book1);
+        _bookShelf.ReturnBook(book1.Name);
 
-        Assert.True(_bookShelf.CheckAvailability(book1));
+        Assert.True(!_bookShelf.CheckAvailability(book1.Name));
     }
 }
