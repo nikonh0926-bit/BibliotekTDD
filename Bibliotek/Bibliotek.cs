@@ -1,7 +1,7 @@
 public class Book(string name)
 {
     public string Name {get; set;} = name;
-    public bool IsBorrowed {get; set;} = false; // true == not available
+    public bool IsBorrowed {get; set;} = true; // false == not available
 }
 
 public class BookShelf
@@ -28,28 +28,30 @@ public class BookShelf
         return new (_bookShelf);
     }
     
-    public bool CheckAvailability(string bookName)
+    public bool CheckAvailability(string bookName, out string message) // returns true if the book is available to be borrowed
     {
+        message = "";
         Book? _book = ReturnWantedBook(bookName);
         if(_book != null)
         {
             return _book.IsBorrowed;
         }
-        return true;
+        message = "Book does not exist in bookshelf.";
+        return false;
     }
     public void BorrowBook(string bookName)
     {
-        if(CheckAvailability(bookName))
+        if(!CheckAvailability(bookName, out string message))
             return;
         Book? _book = ReturnWantedBook(bookName);
         if(_book != null)
-            _book.IsBorrowed = true;
+            _book.IsBorrowed = false;
             
     }
     public void ReturnBook(string bookName)
     {
         Book? _book = ReturnWantedBook(bookName);
         if(_book != null)
-            _book.IsBorrowed = false;
+            _book.IsBorrowed = true;
     }
 }

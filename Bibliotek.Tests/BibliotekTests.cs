@@ -22,7 +22,10 @@ public class BibliotekTests
 
         _bookShelf.AddBook(book1);
 
-        Assert.True(!_bookShelf.CheckAvailability(book1.Name));
+        Assert.True(_bookShelf.CheckAvailability(book1.Name, out string message));
+
+        Assert.True(!_bookShelf.CheckAvailability("denne boken existerer ikke", out string message2));
+        Assert.NotEmpty(message2);
     }
     [Fact]
     public void TestBorrowBook()
@@ -32,11 +35,11 @@ public class BibliotekTests
 
         _bookShelf.AddBook(book1);
 
-        Assert.True(!_bookShelf.CheckAvailability(book1.Name));
+        Assert.True(_bookShelf.CheckAvailability(book1.Name, out string message));
         
         _bookShelf.BorrowBook(book1.Name);
 
-        Assert.True(_bookShelf.CheckAvailability(book1.Name));
+        Assert.True(!_bookShelf.CheckAvailability(book1.Name, out string message2));
 
     }
     [Fact]
@@ -48,10 +51,10 @@ public class BibliotekTests
         _bookShelf.AddBook(book1);
         _bookShelf.BorrowBook(book1.Name);
 
-        Assert.True(_bookShelf.CheckAvailability(book1.Name));
+        Assert.True(!_bookShelf.CheckAvailability(book1.Name, out string message));
 
         _bookShelf.ReturnBook(book1.Name);
 
-        Assert.True(!_bookShelf.CheckAvailability(book1.Name));
+        Assert.True(_bookShelf.CheckAvailability(book1.Name, out string message2));
     }
 }
