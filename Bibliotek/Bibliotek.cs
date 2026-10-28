@@ -14,14 +14,7 @@ public class BookShelf
     }
     Book? ReturnWantedBook(string bookName)
     {
-        foreach(Book books in _bookShelf)
-        {
-            if(books.Name == bookName)
-            {
-                return books;
-            }
-        }
-        return null;
+        return _bookShelf.FirstOrDefault(x => x.Name == bookName);
     }
     public List<Book> GetAll()
     {
