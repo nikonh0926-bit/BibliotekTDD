@@ -1,8 +1,8 @@
 public interface IBookService
 {
-    public void AddBook(Book book);
-    public List<Book> GetAll();
-    public bool CheckAvailability(string bookName, out string message);
-    public void BorrowBook(string bookName);
-    public void ReturnBook(string bookName);
+    public Task AddBook(Book book);
+    public Task<IReadOnlyList<Book>> GetAll();
+    public Task<bool> CheckAvailability(Guid bookId);
+    public Task BorrowBook(Guid bookId);
+    public Task ReturnBook(Guid bookId);
 }

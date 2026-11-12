@@ -1,30 +1,25 @@
 
-public class BookService : IBookService
+public class BookService(IBookRepository repository) : IBookService
 {
-    List<Book> _bookShelf = new List<Book>();
+    private readonly IBookRepository _repository = repository;
 
-    public void AddBook(Book book)
+    public async Task AddBook(Book book)
     {
-        _bookShelf.Add(book);
+       await _repository.AddBook(book);
     }
-    Book? ReturnWantedBook(string bookName)
+    public async Task<IReadOnlyList<Book>> GetAll()
     {
-        return _bookShelf.FirstOrDefault(x => x.Name == bookName);
+        return new List<Book>();
     }
-    public List<Book> GetAll()
+
+    public async Task<bool> CheckAvailability(Guid bookId) // returns true if the book is available to be borrowed
     {
-        return new (_bookShelf);
-    }
-    
-    public bool CheckAvailability(string bookName, out string message) // returns true if the book is available to be borrowed
-    {
-        message = "";
         return false;
     }
-    public void BorrowBook(string bookName)
+    public async Task BorrowBook(Guid bookId)
     { 
     }
-    public void ReturnBook(string bookName)
+    public async Task ReturnBook(Guid bookId)
     {
         
     }
