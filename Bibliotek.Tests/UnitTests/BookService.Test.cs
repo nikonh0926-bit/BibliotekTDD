@@ -14,9 +14,7 @@ public class BibliotekTests
         await bookService.AddBook(book1);
         await bookService.AddBook(book2);
 
-        IReadOnlyList<Book> books = await bookService.GetAll();
-
-        Assert.True(books.Count == 2);
+        Assert.Equal(2, (await bookService.GetAll()).Count);
     }
     [Fact]
     public async Task TestCheckAvailability()
@@ -27,9 +25,9 @@ public class BibliotekTests
 
         await bookService.AddBook(book1);
 
-        Assert.True(await bookService.CheckAvailability(book1.Id));
+        Assert.Equal(Book.BookStatus.Available, await bookService.CheckAvailability(book1.Id));
 
-        Assert.False(await bookService.CheckAvailability(Guid.NewGuid()));
+        Assert.Equal(Book.BookStatus.notFound, await bookService.CheckAvailability(Guid.NewGuid()));
     }
     [Fact]
     public async Task TestBorrowBook()
@@ -40,11 +38,12 @@ public class BibliotekTests
 
         await fakeBookRepository.AddBook(book1);
 
-        Assert.True(await bookService.CheckAvailability(book1.Id));
-        
+        Assert.Equal(Book.BookStatus.Available, await bookService.CheckAvailability(book1.Id));
+
         await bookService.BorrowBook(book1.Id);
 
-        Assert.False(await bookService.CheckAvailability(book1.Id));
+        Assert.Equal(Book.BookStatus.Unavailable, await bookService.CheckAvailability(book1.Id));
+
 
     }
     [Fact]
@@ -57,10 +56,23 @@ public class BibliotekTests
         await bookService.AddBook(book1);
         await bookService.BorrowBook(book1.Id);
 
-        Assert.False(await bookService.CheckAvailability(book1.Id));
+        Assert.Equal(Book.BookStatus.Unavailable, await bookService.CheckAvailability(book1.Id));
 
         await bookService.ReturnBook(book1.Id);
 
-        Assert.True(await bookService.CheckAvailability(book1.Id));
+        Assert.Equal(Book.BookStatus.Available, await bookService.CheckAvailability(book1.Id));
+    }
+    [Fact]
+    public async Task TestBorrowBookNotFound()
+    {
+        FakeBookRepository fakeBookRepository = new FakeBookRepository();
+        BookService bookService = new BookService(fakeBookRepository);
+        Book book1 = new Book("Hunger games");
+
+        await bookService.AddBook(book1);
+
+        Assert.Equal(Book.BookStatus.Available, await bookService.CheckAvailability(book1.Id));
+
+        await Assert.ThrowsAsync<Exception>(async () => await bookService.BorrowBook(Guid.NewGuid()));
     }
 }

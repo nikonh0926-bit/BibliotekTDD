@@ -13,36 +13,36 @@ public class FakeBookRepository : IBookRepository
         return Task.FromResult((IReadOnlyList<Book>)_bookShelf);
     }
 
-    public Task<bool> CheckAvailability(Guid bookId, out string message) // returns true if the book is available to be borrowed
-    {/*
-        message = "";
-        return ReturnWantedBook(bookId.ToString()).ContinueWith(task =>
-        {
-            Book? _book = task.Result;
-            if(_book != null)
-            {
-                return _book.IsBorrowed;
-            }
-        message = "Book does not exist in bookshelf.";
-        return Task.FromResult(false);
-        });*/
-        message = "";
-        return null;
+    public Task<Book.BookStatus> CheckAvailability(Guid bookId) // returns true if the book is available to be borrowed
+    {
+        Book? book = _bookShelf.FirstOrDefault(x => x.Id == bookId);
+        if(book == null)
+            return Task.FromResult(Book.BookStatus.notFound);
+        else if(book.Status == Book.BookStatus.Available)
+            return Task.FromResult(Book.BookStatus.Available);
+        else
+            return Task.FromResult(Book.BookStatus.Unavailable);
     }
     public Task BorrowBook(Guid bookId)
-    { /*
-        Book wantedBook = _bookShelf.FirstOrDefault(x => x.Id == bookId);
-        if(wantedBook != null && wantedBook.IsBorrowed)
-            wantedBook.IsBorrowed = false;
-        return Task.CompletedTask;*/
-        return null;
+    { 
+        Book? book = _bookShelf.FirstOrDefault(x => x.Id == bookId);
+        if(book == null)
+        {
+            throw new Exception("Book not found");
+        }
+        else if(book.Status == Book.BookStatus.Unavailable)
+        {
+            throw new Exception("Book is already borrowed");
+        }
+        else
+            book.Status = Book.BookStatus.Unavailable;
+        return Task.CompletedTask;
     }
     public Task ReturnBook(Guid bookId)
-    {/*
-        Book wantedBook = _bookShelf.FirstOrDefault(x => x.Id == bookId);
-        if(wantedBook != null)
-            wantedBook.IsBorrowed = true;
-        return Task.CompletedTask;*/
-        return null;
+    {
+        Book? book = _bookShelf.FirstOrDefault(x => x.Id == bookId);
+        if(book != null)
+            book.Status = Book.BookStatus.Available;
+        return Task.CompletedTask;
     }
 }
