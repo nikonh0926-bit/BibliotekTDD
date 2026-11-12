@@ -19,7 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Bibliotek\Bibliotek.csproj" />
+    <ProjectReference Include="..\Bibliotek.Core\Bibliotek.Core.csproj" />
   </ItemGroup>
 
 </Project>
